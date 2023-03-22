@@ -4,6 +4,8 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Maps from './Screens/Map.jsx';
+import Home from './Screens/Home.jsx';
+import SignUp from './Screens/SignUp.jsx';
 
 
 const Stack = createStackNavigator();
@@ -12,8 +14,10 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Details" component={Maps} />
+      <Stack.Screen name="Maps" component={Maps} />
+        {/* <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Details" component={Maps} /> */}
+        {/* <Stack.Screen name="Sign Up" component={SignUp} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -22,14 +26,6 @@ export default function App() {
 
 
 
-function HomeScreen({ navigation }) {
-  return (
-    <Button
-      title="Go to Details"
-      onPress={() => navigation.navigate('Details')}
-    />
-  );
-}
 
 
 
