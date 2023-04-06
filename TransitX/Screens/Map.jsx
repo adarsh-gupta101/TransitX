@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import MapView, { Marker, Polyline } from "react-native-maps";
+// import MapView, { Marker, Polyline } from "react-native-maps";
 
 const MapScreen = () => {
   const mapViewRef = useRef(null);
@@ -44,28 +44,29 @@ const MapScreen = () => {
     return () => clearInterval(interval);
   }, []);
 
-  return (
-    <View style={styles.container}>
-    <MapView
-      ref={mapViewRef}
-      style={styles.map}
-      initialRegion={region}
-    >
-      <Marker coordinate={region} />
-      <Polyline
-      strokeWidth={2}
-      strokeColor="red"
-        coordinates={[
-          {   latitude: 10.7874,
-            longitude: 76.6548},
-          { latitude: 15.784, longitude: 76.6548 },
+  // return (
+  //   <View style={styles.container}>
+  //   <MapView
+  //     ref={mapViewRef}
+  //     style={styles.map}
+  //     initialRegion={region}
+  //   >
+  //     <Marker coordinate={region} />
+  //     <Polyline
+  //     strokeWidth={2}
+  //     strokeColor="red"
+  //       coordinates={[
+  //         {   latitude: 10.7874,
+  //           longitude: 76.6548},
+  //         { latitude: 15.784, longitude: 76.6548 },
           
-        ]}
-      />
-    </MapView>
-  </View>
+  //       ]}
+  //     />
+  //   </MapView>
+  // </View>
 
-  );
+  // );
+  return "hi"
 };
 
 const styles = StyleSheet.create({
