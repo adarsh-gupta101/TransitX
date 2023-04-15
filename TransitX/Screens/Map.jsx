@@ -17,17 +17,7 @@ const MapScreen = () => {
     longitude: 76.6548,
   });
 
-  //   useEffect(() => {
-  //     // Simulate changing location every 3 seconds
-  //     const interval = setInterval(() => {
-  //       setLocation({
-  //         latitude: location.latitude + 0.0005,
-  //         longitude: location.longitude + 0.0005,
-  //       });
-  //     }, 500);
-
-  //     return () => clearInterval(interval);
-  //   }, [location]);
+ 
   useEffect(() => {
     const interval = setInterval(() => {
       // Update the region state with the bus's new position
@@ -44,24 +34,7 @@ const MapScreen = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // return (
-  //   <View style={styles.container}>
-  //   <MapView
-  //     ref={mapViewRef}
-  //     style={styles.map}
-  //     initialRegion={region}
-  //   >
-  //     <Marker coordinate={region} />
-  //     <Polyline
-  //     strokeWidth={2}
-  //     strokeColor="red"
-  //       coordinates={[
-  //         {   latitude: 10.7874,
-  //           longitude: 76.6548},
-  //         { latitude: 15.784, longitude: 76.6548 },
-          
-  //       ]}
-  //     />
+  
   //   </MapView>
   // </View>
 

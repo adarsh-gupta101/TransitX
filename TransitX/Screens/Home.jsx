@@ -1,9 +1,17 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import bus from "../assets/buslogo.png";
+import { Button } from "react-native-paper";
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
   const [selectedRoute, setSelectedRoute] = useState("Bus 1");
   const routes = ["Bus 1", "Bus 2", "Bus 3"];
 
@@ -20,6 +28,16 @@ const HomeScreen = () => {
 
   return (
     <ScrollView style={styles.container}>
+      {/* User Avatar  */}
+      <View style={styles.avatarContainer}>
+        <TouchableOpacity onPress={() => navigation.navigate("StudentLogin")}>
+          <Image
+            style={styles.avatar}
+            source={require("../assets/avatar.png")}
+          />
+        </TouchableOpacity>
+      </View>
+
       <Image source={require("../assets/buslogo.png")} style={styles.image} />
       <View styles={styles.textWrap}>
         <Text style={styles.SelectBus}>Select Your Bus</Text>
@@ -52,9 +70,8 @@ const HomeScreen = () => {
             Hospital - Ummini - NSS College
           </Text>
           <TouchableOpacity style={styles.continueButton}>
-            <Text style={styles.buttonText}>Continue</Text>
+            <Button style={styles.buttonText} mode="contained">Continue</Button>
           </TouchableOpacity>
-          
         </View>
       )}
     </ScrollView>
@@ -67,11 +84,18 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     padding: 20,
   },
+  avatarContainer: {
+    padding: 10,
+  },
+  avatar: {
+    width: 50,
+    height: 50,
+  },
   busContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 20,
-    padding:10
+    padding: 10,
   },
   SelectBusdesc: {
     textAlign: "center",
@@ -118,29 +142,30 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 20,
     lineHeight: 25,
-    color:"gray",
+    color: "gray",
   },
   continueButton: {
-    backgroundColor: "#7209b7",
+    // backgroundColor: "#7209b7",
     paddingHorizontal: 20,
     paddingVertical: 10,
-    marginTop:40,
+    marginTop: 40,
     borderRadius: 10,
+    marginBottom: 25,
     width: "95%",
   },
   buttonText: {
-    color: "white",
+    // color: "white",
     fontWeight: "bold",
-    fontSize: 16,
+    // fontSize: 16,
+    padding:5,
     textAlign: "center",
   },
-  image:{
+  image: {
     width: 150,
     height: 100,
     alignSelf: "center",
     borderRadius: 100,
-
-  }
+  },
 });
 
 export default HomeScreen;
