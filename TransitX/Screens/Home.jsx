@@ -10,10 +10,27 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import bus from "../assets/buslogo.png";
 import { Button } from "react-native-paper";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
 
 const HomeScreen = ({ navigation }) => {
   const [selectedRoute, setSelectedRoute] = useState("Bus 1");
   const routes = ["Bus 1", "Bus 2", "Bus 3"];
+
+  
+const getData = async () => {
+  try {
+    const value = await AsyncStorage.getItem('userData')
+    if(value !== null) {
+      // value previously stored
+      console.log("10",value)
+    }
+  } catch(e) {
+    // error reading value
+  }
+}
+
 
   const handleRouteSelect = (route) => {
     setSelectedRoute(route);
@@ -69,7 +86,7 @@ const HomeScreen = ({ navigation }) => {
             Mercy college road - Olavakkod - Thanav -Railiway Colony - Railway
             Hospital - Ummini - NSS College
           </Text>
-          <TouchableOpacity style={styles.continueButton}>
+          <TouchableOpacity style={styles.continueButton} onPress={()=>navigation.navigate("FullScreenMap")}>
             <Button style={styles.buttonText} mode="contained">Continue</Button>
           </TouchableOpacity>
         </View>
@@ -107,7 +124,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   busIcon: {
-    backgroundColor: "#4cc9f0",
+    backgroundColor: "#943AE0",
     alignItems: "center",
     justifyContent: "center",
     padding: 10,

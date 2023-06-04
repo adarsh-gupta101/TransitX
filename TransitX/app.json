@@ -10,10 +10,10 @@
       "image": "./assets/TRansitx.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
-
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/9e2d0d31-662c-49c9-a8a6-976fb70fcf67"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -25,10 +25,19 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.adarsh_gupta.TransitX"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9e2d0d31-662c-49c9-a8a6-976fb70fcf67"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
     }
   }
 }

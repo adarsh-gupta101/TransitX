@@ -1,15 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, KeyboardAvoidingView } from "react-native";
 import { TextInput, Button } from "react-native-paper";
 import { MaterialIcons } from "@expo/vector-icons";
 import UserCard from "./Component/StudentCard.jsx";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function StudentLoginScreen() {
-  const [firstName, setFirstName] = useState("Adarsh");
-  const [lastName, setLastName] = useState("Gupta");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [department, setDepartment] = useState("CSE");
   const [year, setYear] = useState("3");
-  const [email, setEmail] = useState("20bxxx@nssce.ac.in")
+  const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    AsyncStorage.getItem("userData").then((res) => {
+      const data = JSON.parse(res);
+      setFirstName(data.name);
+      setEmail(data.email);
+      console.log(firstName);
+    });
+  }, []);
 
   const handleFirstNameChange = (text) => {
     setFirstName(text);
@@ -112,17 +122,15 @@ export default function StudentLoginScreen() {
         />
       </View>
 
-{/* university email */}
+      {/* university email */}
       <View style={styles.inputContainer}>
         <MaterialIcons
-
           name="email"
           size={24}
           color="#757575"
           style={styles.icon}
         />
         <TextInput
-
           label="Email"
           value={email}
           mode="outlined"

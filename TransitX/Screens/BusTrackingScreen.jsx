@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Picker } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { supabase } from "../supabase";
 
-const BusTrackingScreen = () => {
+const BusTrackingScreen = ({navigation}) => {
   const [selectedBus, setSelectedBus] = useState("Bus 1");
   const busLocations = {
     "Bus 1": {
@@ -19,6 +20,60 @@ const BusTrackingScreen = () => {
       longitude: -122.4063,
     },
   };
+
+  const [BusLocation, setBusLocation] = useState({ latitude: 10.8544341, longitude: 76.4428138 });
+
+  useEffect(() => {
+    const fetchbus = async () => {
+      try {
+        await supabase
+          .from("user_locations")
+          .select("*")
+          .eq("user_id", 1)
+          .then((res) => {
+            setBusLocation({ latitiude: res.lat, longitude: res.long });
+          });
+      } catch (err){console.log(err)}
+    };
+  }, []);
+
+  // useEffect(() => {
+  //   const fetchUserLocations = async () => {
+  //     try {
+  //       const interval = setInterval(async () => {
+  //         // Fetch user locations from the 'user_locations' table
+  //         let { data: user_locations, error } = await supabase
+  //           .from("user_locations")
+  //           .select("*")
+  //           .eq("user_id", 1);
+
+  //         if (error) {
+  //           // console.log(error);
+  //           setError(error.message);
+  //         } else {
+  //           // Update the user locations state
+  //           console.log("_________", user_locations[0].lat);
+
+  //           setBusLocation({
+  //             latitude: user_locations[0]?.lat,
+  //             longitude: user_locations[0].long,
+  //           });
+
+  //           // console.log(typeof user_locations);
+  //         }
+  //       }, 10000); // Fetch every 10 seconds
+
+  //       // Clean up the interval when the component unmounts
+  //       return () => {
+  //         clearInterval(interval);
+  //       };
+  //     } catch (error) {
+  //       setError(error.message);
+  //     }
+  //   };
+
+  //   fetchUserLocations();
+  // }, []);
 
   const BusIcon = ({ route, isSelected }) => (
     <View style={[styles.busIcon, isSelected && styles.selectedBusIcon]}>
@@ -37,21 +92,14 @@ const BusTrackingScreen = () => {
         <View style={styles.busSelectorContainer}>
           <BusIcon isSelected={true} />
           <Text style={styles.busSelectorTitle}>Bus 1</Text>
-
         </View>
         <Text style={styles.nextBus}>Next bus time</Text>
         <Text style={styles.nextBusTime}>Bus 2: 08:20 AM</Text>
         <Text style={styles.nextBusTime}>Bus 3: 08:30 AM</Text>
-
-
-
       </View>
       <View style={styles.busLocationContainer}>
-        <Text style={styles.busLocationTitle}>Current Location:</Text>
-        <Text style={styles.busLocationCoordinates}>
-          {busLocations[selectedBus].latitude.toFixed(4)},
-          {busLocations[selectedBus].longitude.toFixed(4)}
-        </Text>
+        <Text style={styles.busLocationTitle}>Current Location:{" NSS College of Engineering, near railway road"} </Text>
+       
         <TouchableOpacity style={styles.viewScheduleButton}>
           <Text style={styles.viewScheduleButtonText}>View Bus Schedule</Text>
         </TouchableOpacity>
@@ -59,8 +107,8 @@ const BusTrackingScreen = () => {
       <MapView
         style={styles.map}
         initialRegion={{
-          latitude: busLocations[selectedBus].latitude,
-          longitude: busLocations[selectedBus].longitude,
+          latitude: BusLocation?.latitude,
+          longitude: BusLocation?.longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
@@ -68,7 +116,7 @@ const BusTrackingScreen = () => {
         <Marker coordinate={busLocations[selectedBus]} />
       </MapView>
       <TouchableOpacity style={styles.trackButton}>
-        <Text style={styles.trackButtonText}>Tap to Track</Text>
+        <Text style={styles.trackButtonText} onPress={()=>navigation.navigate("Maps")}>Tap to Track</Text>
       </TouchableOpacity>
     </View>
   );
@@ -80,13 +128,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     padding: 20,
   },
-  busSelectorWrapper:{
+  busSelectorWrapper: {
     backgroundColor: "#2292A4",
     padding: 20,
     borderRadius: 10,
     marginBottom: 20,
     color: "white",
-
   },
 
   busSelectorContainer: {
@@ -105,26 +152,23 @@ const styles = StyleSheet.create({
     color: "white",
     marginLeft: 10,
   },
-  nextBus:{
-
+  nextBus: {
     fontSize: 18,
     fontWeight: "bold",
     color: "black",
-    backgroundColor:"white",
-    width:150,
-    padding:5,
-    borderRadius:10,
-
+    backgroundColor: "white",
+    width: 150,
+    padding: 5,
+    borderRadius: 10,
   },
-  nextBusTime:{
-    color:"white",
+  nextBusTime: {
+    color: "white",
     fontSize: 18,
     fontWeight: "bold",
-   
-    width:150,
-    padding:5,
-    borderRadius:10,
-    
+
+    width: 150,
+    padding: 5,
+    borderRadius: 10,
   },
   busSelector: {
     flex: 1,
