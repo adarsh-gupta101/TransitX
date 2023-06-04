@@ -166,7 +166,7 @@ const FullScreenMap = () => {
         {
           params: {
             address: address,
-            key: "AIzaSyDThYz-OiPXBmsRkLt4GyVlzvBbTQSu5Jo", // Replace with your Google Maps API key
+            key: "AIzaSyDThYz", // Replace with your Google Maps API key
           },
         }
       );
@@ -192,7 +192,7 @@ const FullScreenMap = () => {
           params: {
             origin: `${startingCoordinates.latitude},${startingCoordinates.longitude}`,
             destination: `${endingCoordinates.latitude},${endingCoordinates.longitude}`,
-            key: "AIzaSyDThYz-OiPXBmsRkLt4GyVlzvBbTQSu5Jo", // Replace with your Google Maps API key
+            key: "AIzaSyDThYz-", // Replace with your Google Maps API key
           },
         }
       );
