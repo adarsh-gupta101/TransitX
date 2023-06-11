@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect,useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -12,11 +12,21 @@ import bus from "../assets/buslogo.png";
 import { Button } from "react-native-paper";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import Lottie from 'lottie-react-native';
 
 
 const HomeScreen = ({ navigation }) => {
   const [selectedRoute, setSelectedRoute] = useState("Bus 1");
   const routes = ["Bus 1", "Bus 2", "Bus 3"];
+
+  const animationRef = useRef(null)
+
+  useEffect(() => {
+    animationRef.current?.play()
+
+    // Or set a specific startFrame and endFrame with:
+    animationRef.current?.play(30, 120);
+  }, [])
 
   
 const getData = async () => {
@@ -48,6 +58,7 @@ const getData = async () => {
       {/* User Avatar  */}
       <View style={styles.avatarContainer}>
         <TouchableOpacity onPress={() => navigation.navigate("StudentLogin")}>
+         
           <Image
             style={styles.avatar}
             source={require("../assets/avatar.png")}
@@ -55,7 +66,12 @@ const getData = async () => {
         </TouchableOpacity>
       </View>
 
-      <Image source={require("../assets/buslogo.png")} style={styles.image} />
+      <Lottie
+      ref={animationRef}
+      source={require('../assets/traveller.json')}
+      style={{width: 150, height: 150,alignSelf:"center"}}
+    />
+      {/* <Image source={require("../assets/buslogo.png")} style={styles.image} /> */}
       <View styles={styles.textWrap}>
         <Text style={styles.SelectBus}>Select Your Bus</Text>
         <Text style={styles.SelectBusdesc}>

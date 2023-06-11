@@ -1,10 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Picker } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { supabase } from "../supabase";
+import Lottie from "lottie-react-native";
 
-const BusTrackingScreen = ({navigation}) => {
+const BusTrackingScreen = ({ navigation }) => {
+  const animationRef = useRef(null);
+
+  useEffect(() => {
+    animationRef.current?.play();
+
+    // Or set a specific startFrame and endFrame with:
+    animationRef.current?.play(30, 120);
+  }, []);
   const [selectedBus, setSelectedBus] = useState("Bus 1");
   const busLocations = {
     "Bus 1": {
@@ -21,7 +30,10 @@ const BusTrackingScreen = ({navigation}) => {
     },
   };
 
-  const [BusLocation, setBusLocation] = useState({ latitude: 10.8544341, longitude: 76.4428138 });
+  const [BusLocation, setBusLocation] = useState({
+    latitude: 10.8544341,
+    longitude: 76.4428138,
+  });
 
   useEffect(() => {
     const fetchbus = async () => {
@@ -33,11 +45,12 @@ const BusTrackingScreen = ({navigation}) => {
           .then((res) => {
             setBusLocation({ latitiude: res.lat, longitude: res.long });
           });
-      } catch (err){console.log(err)}
+      } catch (err) {
+        console.log(err);
+      }
     };
   }, []);
 
-  // useEffect(() => {
   //   const fetchUserLocations = async () => {
   //     try {
   //       const interval = setInterval(async () => {
@@ -93,13 +106,27 @@ const BusTrackingScreen = ({navigation}) => {
           <BusIcon isSelected={true} />
           <Text style={styles.busSelectorTitle}>Bus 1</Text>
         </View>
-        <Text style={styles.nextBus}>Next bus time</Text>
-        <Text style={styles.nextBusTime}>Bus 2: 08:20 AM</Text>
-        <Text style={styles.nextBusTime}>Bus 3: 08:30 AM</Text>
+        <View style={{ display: "flex", flexDirection: "row",justifyContent:"space-around" }}>
+          <View>
+            <Text style={styles.nextBus}>Next bus time</Text>
+            <Text style={styles.nextBusTime}>Bus 2: 08:20 AM</Text>
+            <Text style={styles.nextBusTime}>Bus 3: 08:30 AM</Text>
+          </View>
+
+          <View>
+            <Lottie
+              ref={animationRef}
+              source={require("../assets/location.json")}
+              style={{ width: 100, height: 100 }}
+            />
+          </View>
+        </View>
       </View>
       <View style={styles.busLocationContainer}>
-        <Text style={styles.busLocationTitle}>Current Location:{" NSS College of Engineering, near railway road"} </Text>
-       
+        <Text style={styles.busLocationTitle}>
+          Current Location:{" NSS College of Engineering, near railway road"}{" "}
+        </Text>
+
         <TouchableOpacity style={styles.viewScheduleButton}>
           <Text style={styles.viewScheduleButtonText}>View Bus Schedule</Text>
         </TouchableOpacity>
@@ -112,11 +139,26 @@ const BusTrackingScreen = ({navigation}) => {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
+        userInterfaceStyle="dark"
+        showsUserLocation="true"
+        showsMyLocationButton="true"
+        showsCompass="true"
+        showsBuildings="true"
+        showsTraffic="true"
+        showsIndoors="true"
+        showsIndoorLevelPicker="true"
+        showsPointsOfInterest="true"
+        showsScale="true"
       >
         <Marker coordinate={busLocations[selectedBus]} />
       </MapView>
       <TouchableOpacity style={styles.trackButton}>
-        <Text style={styles.trackButtonText} onPress={()=>navigation.navigate("Maps")}>Tap to Track</Text>
+        <Text
+          style={styles.trackButtonText}
+          onPress={() => navigation.navigate("Maps")}
+        >
+          Tap to Track
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -132,6 +174,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#2292A4",
     padding: 20,
     borderRadius: 10,
+    marginTop: 20,
     marginBottom: 20,
     color: "white",
   },

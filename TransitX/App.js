@@ -9,11 +9,11 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-import Maps from "./Screens/FullScreenMaps.jsx";
+import Maps from "./Screens/FullScreenMap.jsx";
 import Home from "./Screens/Home.jsx";
 import SignUp from "./Screens/SignUp.jsx";
 import BusTrackingScreen from "./Screens/BusTrackingScreen.jsx";
-import FullScreenMap from "./Screens/FullScreenMaps.jsx";
+import FullScreenMap from "./Screens/FullScreenMap.jsx";
 import StudentLoginScreen from "./Screens/StudentLogin.jsx";
 import GetStarted from "./Screens/GetStarted.jsx";
 import NotificationList from "./Screens/Notification.jsx";
@@ -62,7 +62,7 @@ function HomeStack() {
         }}
       />
 
-{/* <Tab.Screen
+<Tab.Screen
         name="Notificationssection"
         component={Push}
         options={{
@@ -71,7 +71,7 @@ function HomeStack() {
             <MaterialCommunityIcons name="bell" color={color} size={26} />
           ),
         }}
-      /> */}
+      />
 
       <Tab.Screen
         name="FullScreenMap"

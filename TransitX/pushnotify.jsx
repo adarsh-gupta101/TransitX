@@ -17,23 +17,23 @@ export default function Push() {
   const notificationListener = useRef();
   const responseListener = useRef();
 
-  Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldShowAlert: true,
-      shouldPlaySound: false,
-      shouldSetBadge: false,
-    }),
-  });
+  // Notifications.setNotificationHandler({
+  //   handleNotification: async () => ({
+  //     shouldShowAlert: true,
+  //     shouldPlaySound: false,
+  //     shouldSetBadge: false,
+  //   }),
+  // });
   
-  // Second, call the method
+  // // Second, call the method
   
-  Notifications.scheduleNotificationAsync({
-    content: {
-      title: 'Look at that notification',
-      body: "I'm so proud of myself!",
-    },
-    trigger: null,
-  });
+  // Notifications.scheduleNotificationAsync({
+  //   content: {
+  //     title: 'Look at that notification',
+  //     body: "I'm so proud of myself!",
+  //   },
+  //   trigger: null,
+  // });
   
 
   useEffect(() => {

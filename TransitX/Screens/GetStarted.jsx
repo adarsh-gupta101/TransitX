@@ -1,11 +1,30 @@
-import React from "react";
+import React, {useEffect,useRef} from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { Button } from "react-native-paper";
+import Lottie from 'lottie-react-native';
+
 
 const GetStarted = ({ navigation }) => {
+  const animationRef = useRef(null)
+
+  useEffect(() => {
+    animationRef.current?.play()
+
+    // Or set a specific startFrame and endFrame with:
+    animationRef.current?.play(30, 120);
+  }, [])
+
   return (
     <View style={styles.container}>
-      <Image source={require("../assets/TRansitx.png")} style={styles.image} />
+
+
+    <Lottie
+      ref={animationRef}
+      source={require('../assets/bus.json')}
+      style={{width: 400, height: 400}}
+    />
+
+      {/* <Image source={require("../assets/TRansitx.png")} style={styles.image} /> */}
       <Text style={styles.title}>Why Worried?</Text>
       <Text style={styles.slogan}>
         Get to your destination with ease with just a matter of clicks .

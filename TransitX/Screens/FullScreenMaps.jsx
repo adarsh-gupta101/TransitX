@@ -21,34 +21,36 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { supabase } from "../supabase"; // Replace './Supabase' with the correct path to your Supabase client file
 import { ETA } from "../utils/utils";
 
-
-
 const FullScreenMaps = () => {
-  const [startingLocation, setStartingLocation] = useState({latitude:10.7668,longitude:76.6491});
-  const [endingLocation, setEndingLocation] = useState({latitude:10.8240,longitude:76.6426});
+  const [startingLocation, setStartingLocation] = useState({
+    latitude: 10.7668,
+    longitude: 76.6491,
+  });
+  const [endingLocation, setEndingLocation] = useState({
+    latitude: 10.824,
+    longitude: 76.6426,
+  });
   const [routeCoordinates, setRouteCoordinates] = useState([]);
   const [distance, setDistance] = useState(null);
   const [duration, setDuration] = useState(null);
   const [BusLocation, setBusLocation] = useState();
   const [Error, setError] = useState("");
-  
- 
+
   const [mapType, setMapType] = useState("standard");
   const [traffic, Settraffic] = useState(false);
   const [etaData, setEtaData] = useState(null);
   const [umminiData, setumminiData] = useState(null);
 
-
   //   get bus location from supabase
   const fetchUserLocations = async () => {
-    console.log("Fetching location")
+    console.log("Fetching location");
     try {
       // Fetch user locations from the 'user_locations' table
       let { data: user_locations, error } = await supabase
         .from("user_locations")
         .select("*")
         .eq("user_id", 1);
-  
+
       if (error) {
         setError(error.message);
       } else {
@@ -62,12 +64,12 @@ const FullScreenMaps = () => {
       setError(error.message);
     }
   };
-  
+
   useEffect(() => {
     fetchUserLocations();
-  
+
     const interval = setInterval(fetchUserLocations, 1000); // Fetch every 10 seconds
-  
+
     // Clean up the interval when the component unmounts
     return () => {
       clearInterval(interval);
@@ -110,7 +112,7 @@ const FullScreenMaps = () => {
       latitude: 10.82344,
       longitude: 76.63165,
     });
-  }, []);
+  });
 
   // console.log('ummirni',umminiData)
 
@@ -175,7 +177,6 @@ const FullScreenMaps = () => {
     }
   };
 
-
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => ["5%", "25%", "50%"], []);
   const handleSheetChanges = useCallback((index) => {
@@ -209,7 +210,7 @@ const FullScreenMaps = () => {
     };
 
     fetchCoordinates();
-  }, []);
+  });
 
   useEffect(() => {
     (async () => {
@@ -323,7 +324,7 @@ const FullScreenMaps = () => {
           style={styles.map}
           initialRegion={{
             latitude: 10.7668 || startingLocation.latitude || 10.7668,
-            longitude:  76.6491 ||startingLocation.longitude || 76.6491,
+            longitude: 76.6491 || startingLocation.longitude || 76.6491,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
@@ -365,7 +366,7 @@ const FullScreenMaps = () => {
             description="This is the starting location"
           ></Marker> */}
 
-        {/* { etaData && <Marker
+          {/* { etaData && <Marker
             coordinate={{
               latitude: 10.7973,
               longitude: 76.6391,
@@ -417,14 +418,13 @@ const FullScreenMaps = () => {
           ></Marker> */}
 
           {/* Polyline representing the route */}
-        {/* { routeCoordinates && <Polyline
+          {/* { routeCoordinates && <Polyline
             coordinates={routeCoordinates ? routeCoordinates : []}
             strokeWidth={4}
             strokeColor="hotpink"
           />} */}
         </MapView>
-      )
-      }
+      )}
 
       <BottomSheet
         ref={bottomSheetRef}
@@ -484,30 +484,31 @@ const FullScreenMaps = () => {
           <Card style={{ padding: 15, textAlign: "center", marginVertical: 5 }}>
             <Text
               variant="titleMedium"
-              styles={[styles.BottomSheet, { textAlign: "center", padding:5 }]}
+              styles={[styles.BottomSheet, { textAlign: "center", padding: 5 }]}
             >
               <MaterialCommunityIcons
                 name="bus-stop-uncovered"
                 size={18}
-                style={{ color: "black", }}
+                style={{ color: "black" }}
               />{" "}
-              Your Bus will reach OlavaKode Junction in {" "}
-              {etaData?.durationText}  {"("}{etaData?.distanceText}{")"}
+              Your Bus will reach OlavaKode Junction in {etaData?.durationText}{" "}
+              {"("}
+              {etaData?.distanceText}
+              {")"}
             </Text>
           </Card>
 
           <Card style={{ padding: 15, textAlign: "center", marginVertical: 5 }}>
             <Text
               variant="titleMedium"
-              styles={[styles.BottomSheet, { textAlign: "center", padding:5 }]}
+              styles={[styles.BottomSheet, { textAlign: "center", padding: 5 }]}
             >
               <MaterialCommunityIcons
                 name="bus-stop-uncovered"
                 size={18}
-                style={{ color: "black", }}
+                style={{ color: "black" }}
               />{" "}
-              Your Bus will reach Ummini Junction in {" "}
-              {umminiData?.durationText}
+              Your Bus will reach Ummini Junction in {umminiData?.durationText}
             </Text>
           </Card>
         </View>
