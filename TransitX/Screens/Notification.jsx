@@ -1,124 +1,194 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Text, View, Button, Platform } from 'react-native';
-import * as Device from 'expo-device';
-import * as Notifications from 'expo-notifications';
-import { supabase } from '../supabase';
-// Initialize Supabase client
-const supabase = createClient('your-supabase-url', 'your-supabase-key');
+// import { useEffect, useRef } from "react";
+// import { Platform } from "react-native";
+// import * as Device from "expo-device";
+// import * as Notifications from "expo-notifications";
+// import { supabase } from "../supabase";
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
-});
+// export function initializeNotifications() {
+//   useEffect(() => {
+//     registerForPushNotificationsAsync().then((token) => {
+//       if (Platform.OS === "android") {
+//         Notifications.setNotificationChannelAsync("default", {
+//           name: "default",
+//           importance: Notifications.AndroidImportance.MAX,
+//           vibrationPattern: [0, 250, 250, 250],
+//           lightColor: "#FF231F7C",
+//         });
+//       }
+//     });
 
-export default function Push() {
-  const [expoPushToken, setExpoPushToken] = useState('');
-  const [notification, setNotification] = useState(false);
-  const notificationListener = useRef();
-  const responseListener = useRef();
+//     const notificationListener = Notifications.addNotificationReceivedListener(
+//       (notification) => {
+//         handleNotification(notification);
+//       }
+//     );
+
+//     const responseListener =
+//       Notifications.addNotificationResponseReceivedListener((response) => {
+//         console.log(response);
+//       });
+
+//     const subscription = supabase
+//       .from("messages")
+//       .on("INSERT", (payload) => {
+//         const newMessage = payload.new;
+//         sendPushNotification(newMessage.message);
+//       })
+//       .subscribe();
+
+//     return () => {
+//       Notifications.removeNotificationSubscription(notificationListener);
+//       Notifications.removeNotificationSubscription(responseListener);
+//       subscription.unsubscribe();
+//     };
+//   }, []);
+// }
+
+// function sendPushNotification(message) {
+//   Notifications.scheduleNotificationAsync({
+//     content: {
+//       title: "New Message",
+//       body: message,
+//       ios: {
+//         sound: true,
+//       },
+//       android: {
+//         sound: true,
+//         priority: "high",
+//         sticky: false,
+//         vibrate: true,
+//         alert: true,
+//       },
+//     },
+//     trigger: null,
+//   });
+// }
+
+// async function registerForPushNotificationsAsync() {
+//   let token;
+
+//   if (Platform.OS === "android") {
+//     await Notifications.setNotificationChannelAsync("default", {
+//       name: "default",
+//       importance: Notifications.AndroidImportance.MAX,
+//       vibrationPattern: [0, 250, 250, 250],
+//       lightColor: "#FF231F7C",
+//     });
+//   }
+
+//   if (Device.isDevice) {
+//     const { status: existingStatus } =
+//       await Notifications.getPermissionsAsync();
+//     let finalStatus = existingStatus;
+//     if (existingStatus !== "granted") {
+//       const { status } = await Notifications.requestPermissionsAsync();
+//       finalStatus = status;
+//     }
+//     if (finalStatus !== "granted") {
+//       alert("Failed to get push token for push notification!");
+//       return;
+//     }
+//     token = (await Notifications.getExpoPushTokenAsync()).data;
+//     console.log(token);
+//   } else {
+//     alert("Must use physical device for Push Notifications");
+//   }
+
+//   return token;
+// }
+
+import React, { useEffect, useState } from "react";
+import { FlatList, StyleSheet, Text, View } from "react-native";
+import { supabase } from "../supabase";
+
+export default function NotificationList() {
+  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then((token) => setExpoPushToken(token));
+    const fetchNotifications = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("driver_alerts")
+          .select("id, message, timestamp")
+          .order("timestamp", { ascending: false });
 
-    notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
-      setNotification(notification);
-    });
-
-    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
-      console.log(response);
-    });
-
-    // Subscribe to Supabase real-time changes
-    const subscription = supabase
-      .from('messages')
-      .on('INSERT', (payload) => {
-        const newMessage = payload.new;
-        sendPushNotification(newMessage);
-      })
-      .subscribe();
-
-    return () => {
-      Notifications.removeNotificationSubscription(notificationListener.current);
-      Notifications.removeNotificationSubscription(responseListener.current);
-      subscription.unsubscribe();
+        if (error) {
+          console.log(error);
+        } else {
+          setNotifications(data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     };
+
+    fetchNotifications();
   }, []);
 
-  const sendPushNotification = async (message) => {
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: 'New Message',
-        body: message,
-      },
-      trigger: null,
-    });
+  const renderNotification = ({ item }) => {
+    return (
+      <View style={styles.notification}>
+        <Text style={styles.message}>{item.message}</Text>
+        <Text style={styles.timestamp}>{item.timestamp}</Text>
+      </View>
+    );
   };
 
-  async function schedulePushNotification() {
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: "You've got mail! 📬",
-        body: 'Here is the notification body',
-        data: { data: 'goes here' },
-      },
-      trigger: { seconds: 2 },
-    });
-  }
-
-  async function registerForPushNotificationsAsync() {
-    let token;
-
-    if (Platform.OS === 'android') {
-      await Notifications.setNotificationChannelAsync('default', {
-        name: 'default',
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: '#FF231F7C',
-      });
-    }
-
-    if (Device.isDevice) {
-      const { status: existingStatus } = await Notifications.getPermissionsAsync();
-      let finalStatus = existingStatus;
-      if (existingStatus !== 'granted') {
-        const { status } = await Notifications.requestPermissionsAsync();
-        finalStatus = status;
-      }
-      if (finalStatus !== 'granted') {
-        alert('Failed to get push token for push notification!');
-        return;
-      }
-      token = (await Notifications.getExpoPushTokenAsync()).data;
-      console.log(token);
-    } else {
-      alert('Must use physical device for Push Notifications');
-    }
-
-    return token;
-  }
-
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'space-around',
-      }}>
-      <Text>Your expo push token: {expoPushToken}</Text>
-      <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Title: {notification && notification.request.content.title} </Text>
-        <Text>Body: {notification && notification.request.content.body}</Text>
-        <Text>Data: {notification && JSON.stringify(notification.request.content.data)}</Text>
-      </View>
-      <Button
-        title="Press to schedule a notification"
-        onPress={async () => {
-          await schedulePushNotification();
-        }}
-      />
+    <View style={styles.container}>
+      <Text style={styles.heading}>Notifications</Text>
+      {notifications.length > 0 ? (
+        <FlatList
+          data={notifications}
+          renderItem={renderNotification}
+          keyExtractor={(item) => item.id.toString()}
+          style={styles.list}
+        />
+      ) : (
+        <Text style={styles.emptyMessage}>No notifications yet</Text>
+      )}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  heading: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  list: {
+    width: "100%",
+  },
+  notification: {
+    backgroundColor: "#fff",
+    padding: 20,
+    marginBottom: 10,
+    borderRadius: 5,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  message: {
+    fontSize: 18,
+    marginBottom: 10,
+  },
+  timestamp: {
+    fontSize: 14,
+    color: "#666",
+  },
+  emptyMessage: {
+    fontSize: 18,
+    color: "#666",
+  },
+});

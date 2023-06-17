@@ -1,5 +1,11 @@
 import { StyleSheet, View, TouchableOpacity, Image } from "react-native";
-import React, { useState, useEffect,useRef,useMemo,useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+} from "react";
 import { supabase } from "../supabase";
 import axios from "axios";
 import geolib from "geolib";
@@ -15,28 +21,24 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import * as Location from "expo-location";
 
-
-
-
 // maps
 import MapView, { Marker, Polyline } from "react-native-maps";
 
 const FullScreenMap = () => {
-
-
   const [currentLocation, setCurrentLocation] = useState(null);
   const [etaData, setEtaData] = useState(null);
-  const [umminiData, setumminiData] = useState({"distanceInKilometers": 27.0443, "durationInMinutes": 28.5283});
-const [OlavaKodeData,setOlavaKodeData]=useState()
+  const [umminiData, setumminiData] = useState({
+    distanceInKilometers: 27.0443,
+    durationInMinutes: 28.5283,
+  });
+  const [OlavaKodeData, setOlavaKodeData] = useState();
 
-
-
-// 
-const bottomSheetRef = useRef(null);
-const snapPoints = useMemo(() => ["5%", "25%", "50%"], []);
-const handleSheetChanges = useCallback((index) => {
-  // console.log("handleSheetChanges", index);
-}, []);
+  //
+  const bottomSheetRef = useRef(null);
+  const snapPoints = useMemo(() => ["5%", "25%", "50%"], []);
+  const handleSheetChanges = useCallback((index) => {
+    // console.log("handleSheetChanges", index);
+  }, []);
 
   const [mapType, setMapType] = useState("standard");
   const [traffic, Settraffic] = useState(false);
@@ -49,7 +51,7 @@ const handleSheetChanges = useCallback((index) => {
     latitude: 10.7668,
     longitude: 76.6491,
   });
- const [startingLocation, setStartingLocation] = useState({
+  const [startingLocation, setStartingLocation] = useState({
     latitude: 10.7668,
     longitude: 76.6491,
   });
@@ -59,7 +61,9 @@ const handleSheetChanges = useCallback((index) => {
     longitude: 76.6426,
   });
 
-  const [userLocation,SetUserLocation]=useState();
+  const API = "5b3ce3597851110001cf6248771493c655ba4a5a8b6fab61932e875e";
+
+  const [userLocation, SetUserLocation] = useState();
   const [FootWalkingCoordinate, setFootWalkingCoordinate] = useState(null);
 
   // find user coordinates using expo-location
@@ -70,25 +74,23 @@ const handleSheetChanges = useCallback((index) => {
         console.log("Permission to access location was denied");
         return;
       }
-      
+
       // Retrieve current location
       Location.getCurrentPositionAsync({}).then((locationData) => {
         const { latitude, longitude } = locationData.coords;
         console.log("Location:", latitude, longitude);
-        
+
         // Set the user location state
         SetUserLocation({ latitude, longitude });
-        fetchEtaDatas(BusLocation,  userLocation ).then((data) => {
-          console.log("data",data);
-          SetBusDistanceFromYou(data)
-        
-        })
+        fetchEtaDatas(BusLocation, userLocation).then((data) => {
+          console.log("data", data);
+          SetBusDistanceFromYou(data);
+        });
       });
     });
   }, []);
-  
 
-  const [BusDistanceFromYou,SetBusDistanceFromYou]=useState(0)
+  const [BusDistanceFromYou, SetBusDistanceFromYou] = useState(0);
 
   const [routeCoordinates, setRouteCoordinates] = useState(null);
   // useEffects
@@ -107,7 +109,7 @@ const handleSheetChanges = useCallback((index) => {
         .then((response) => {
           let { data: user_locations, error } = response;
 
-          console.log("User locations:", user_locations)
+          console.log("User locations:", user_locations);
 
           if (error) {
             setError(error.message);
@@ -140,14 +142,13 @@ const handleSheetChanges = useCallback((index) => {
         "https://api.openrouteservice.org/v2/directions/driving-hgv",
         {
           params: {
-            api_key: process.env.ORS, // Replace with your OpenRouteService API key
+            api_key: API, // Replace with your OpenRouteService API key
             start: `${startingCoordinates.longitude},${startingCoordinates.latitude}`,
             end: `${endingCoordinates.longitude},${endingCoordinates.latitude}`,
             // end: `${76.63165},${10.82344}`,
             geometry_format: "geojson",
-            alternatives:true,
-            
-            
+            alternatives: true,
+
             // waypoints: waypoints.map(([longitude, latitude]) => `${longitude},${latitude}`).join("|"),
             // longitude: 76.63165,
             // latitude: 10.82344,
@@ -163,15 +164,17 @@ const handleSheetChanges = useCallback((index) => {
         //   latitude,
         //   longitude,
         // }));
-        const transformedCoordinates = coordinates.map(([longitude, latitude]) => ({
-          latitude,
-          longitude,
-        }));
+        const transformedCoordinates = coordinates.map(
+          ([longitude, latitude]) => ({
+            latitude,
+            longitude,
+          })
+        );
 
         setRouteCoordinates(transformedCoordinates);
         // console.log("111", decodePolyline(coordinates));
         console.log("------------------------"); //
-        console.log(response.data.features.length )
+        console.log(response.data.features.length);
         console.log("------------------------"); //
       } else {
         console.log("Route request failed");
@@ -193,14 +196,13 @@ const handleSheetChanges = useCallback((index) => {
         "https://api.openrouteservice.org/v2/directions/foot-walking",
         {
           params: {
-            api_key: process.env.ORS, // Replace with your OpenRouteService API key
+            api_key: API, // Replace with your OpenRouteService API key
             start: `${startingCoordinates.longitude},${startingCoordinates.latitude}`,
             end: `${endingCoordinates.longitude},${endingCoordinates.latitude}`,
             // end: `${76.63165},${10.82344}`,
             geometry_format: "geojson",
-            alternatives:true,
-            
-            
+            alternatives: true,
+
             // waypoints: waypoints.map(([longitude, latitude]) => `${longitude},${latitude}`).join("|"),
             // longitude: 76.63165,
             // latitude: 10.82344,
@@ -216,16 +218,18 @@ const handleSheetChanges = useCallback((index) => {
         //   latitude,
         //   longitude,
         // }));
-        const transformedCoordinates = coordinates.map(([longitude, latitude]) => ({
-          latitude,
-          longitude,
-        }));
-        console.log("transformedCoordinates-------",transformedCoordinates)
+        const transformedCoordinates = coordinates.map(
+          ([longitude, latitude]) => ({
+            latitude,
+            longitude,
+          })
+        );
+        console.log("transformedCoordinates-------", transformedCoordinates);
 
         setFootWalkingCoordinate(transformedCoordinates);
         // console.log("111", decodePolyline(coordinates));
         console.log("------------------------"); //
-        console.log(response.data.features.length )
+        console.log(response.data.features.length);
         console.log("------------------------"); //
       } else {
         console.log("Route request failed");
@@ -235,69 +239,68 @@ const handleSheetChanges = useCallback((index) => {
     }
   };
 
-
-  
-    
-  
-
-    const fetchEtaDatas = async (originCoordinates, destinationCoordinates) => {
-      try {
-        const response = await axios.get(
-          "https://api.openrouteservice.org/v2/directions/driving-car",
-          {
-            params: {
-              api_key: process.env.ORS, // Replace with your OpenRouteService API key
-              start: `${originCoordinates?.longitude},${originCoordinates?.latitude}`,
-              end: `${destinationCoordinates?.longitude},${destinationCoordinates?.latitude}`,
-            },
-          }
-        );
-    
-        if (response.data) {
-          // console.log("distance",response.data.features.length,response.data.features[0].properties.summary.distance,response.data.features[0].properties.summary)
-          // const result = response.data.routes[0];
-          console.log("result",1)
-          const distanceInKilometers= (response.data.features[0].properties.summary.distance/1000).toFixed(2);
-          const durationInMinutes = (response.data.features[0].properties.summary.duration/60).toFixed(2);
-          // const distanceText = result?.summary?.distance;
-          // const durationText = result?.summary?.duration;
-          // setumminiData({ distanceText, durationText });
-          return { distanceInKilometers, durationInMinutes };
-        } else {
-          console.log("Distance calculation failed");
-          return null;
+  const fetchEtaDatas = async (originCoordinates, destinationCoordinates) => {
+    try {
+      const response = await axios.get(
+        "https://api.openrouteservice.org/v2/directions/driving-car",
+        {
+          params: {
+            api_key: API, // Replace with your OpenRouteService API key
+            start: `${originCoordinates?.longitude},${originCoordinates?.latitude}`,
+            end: `${destinationCoordinates?.longitude},${destinationCoordinates?.latitude}`,
+          },
         }
-      } catch (error) {
-        console.error("Error calculating distance::", error);
+      );
+
+      if (response.data) {
+        // console.log("distance",response.data.features.length,response.data.features[0].properties.summary.distance,response.data.features[0].properties.summary)
+        // const result = response.data.routes[0];
+        console.log("result", 1);
+        const distanceInKilometers = (
+          response.data.features[0].properties.summary.distance / 1000
+        ).toFixed(2);
+        const durationInMinutes = (
+          response.data.features[0].properties.summary.duration / 60
+        ).toFixed(2);
+        // const distanceText = result?.summary?.distance;
+        // const durationText = result?.summary?.duration;
+        // setumminiData({ distanceText, durationText });
+        return { distanceInKilometers, durationInMinutes };
+      } else {
+        console.log("Distance calculation failed");
         return null;
       }
-    };
-    
-    useEffect(() => {
-      const umminiDatas = fetchEtaDatas(BusLocation, {
-        latitude: 10.82344,
-        longitude: 76.63165,
-      }).then((data) => {
-        console.log(data);
-        setumminiData(data);
+    } catch (error) {
+      console.error("Error calculating distance::", error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    const umminiDatas = fetchEtaDatas(BusLocation, {
+      latitude: 10.82344,
+      longitude: 76.63165,
+    }).then((data) => {
+      console.log(data);
+      setumminiData(data);
     });
 
-
     fetchEtaDatas(BusLocation, {
-      latitude:10.7995,
-      longitude:76.6427,
+      latitude: 10.7995,
+      longitude: 76.6427,
     }).then((data) => {
       console.log(data);
       setOlavaKodeData(data);
-    })
+    });
 
-{userLocation && fetchEtaDatas(BusLocation,  userLocation ).then((data) => {
-  console.log("data",data);
-  SetBusDistanceFromYou(data)
-
-})}
-
-  },[])
+    {
+      userLocation &&
+        fetchEtaDatas(BusLocation, userLocation).then((data) => {
+          console.log("data", data);
+          SetBusDistanceFromYou(data);
+        });
+    }
+  }, []);
   useEffect(() => {
     // Fetch the starting and ending coordinates here
     const startingAddress = "Palakkad"; // Replace with the starting address
@@ -315,7 +318,7 @@ const handleSheetChanges = useCallback((index) => {
           startingLocation,
           endingLocation
         );
-        FootWalkingCoordinates(startingLocation,endingLocation)
+        FootWalkingCoordinates(startingLocation, endingLocation);
         console.log("coordinates", coordinates);
       } catch (error) {
         console.error("Error:", error);
@@ -383,57 +386,51 @@ const handleSheetChanges = useCallback((index) => {
           <Polyline
             coordinates={routeCoordinates ? routeCoordinates : []}
             strokeWidth={4}
-            strokeColor="red"
+            strokeColor={mapType == "hybrid" ? "skyblue" : "red"}
             strokeOpacity={1}
             strokeCap="round"
-            
           />
         )}
 
-{
-  FootWalkingCoordinate && (
-    <Polyline
-      coordinates={FootWalkingCoordinate ? FootWalkingCoordinate : []}
-      strokeWidth={4}
-      strokeColor="blue"
-      strokeOpacity={1}
-      strokeCap="round"
-      />
-  )
-}
+        {FootWalkingCoordinate && (
+          <Polyline
+            coordinates={FootWalkingCoordinate ? FootWalkingCoordinate : []}
+            strokeWidth={4}
+            strokeColor={mapType == "hybrid" ? "white" : "purple"}
+            strokeOpacity={1}
+            strokeCap="round"
+          />
+        )}
 
-{umminiData && (
-            <Marker
-              coordinate={{
-                latitude: 10.82344,
-                longitude: 76.63165,
-              }}
-              title="Ummini Junction"
-              description={
-                etaData
-                  ? `Estimated Arrival - Distance: ${umminiData.distanceText}, Duration: ${umminiData.durationText}`
-                  : ""
+        {umminiData && (
+          <Marker
+            coordinate={{
+              latitude: 10.82344,
+              longitude: 76.63165,
+            }}
+            title="Ummini Junction"
+            description={
+              etaData
+                ? `Estimated Arrival - Distance: ${umminiData.distanceText}, Duration: ${umminiData.durationText}`
+                : ""
             }
-              ></Marker>
-            )}
+          ></Marker>
+        )}
 
-
-  {OlavaKodeData && (
-            <Marker
-              coordinate={{
-                latitude: 10.7993,
-                longitude: 76.634,
-              }}
-              title="OlavaKode Junction"
-              description={
-                OlavaKodeData
-                  ? `Estimated Arrival - Distance: ${OlavaKodeData.distanceInKilometers}, Duration: ${OlavaKodeData.durationInMinutes}`
-                  : ""
-              }
-            ></Marker>
-          )
-
-              }          
+        {OlavaKodeData && (
+          <Marker
+            coordinate={{
+              latitude: 10.7993,
+              longitude: 76.634,
+            }}
+            title="OlavaKode Junction"
+            description={
+              OlavaKodeData
+                ? `Estimated Arrival - Distance: ${OlavaKodeData.distanceInKilometers}, Duration: ${OlavaKodeData.durationInMinutes}`
+                : ""
+            }
+          ></Marker>
+        )}
       </MapView>
 
       <BottomSheet
@@ -483,11 +480,10 @@ const handleSheetChanges = useCallback((index) => {
                 style={{ color: "black" }}
               />{" "}
               Your Bus is{" "}
-              {
-              BusDistanceFromYou?.distanceInKilometers?BusDistanceFromYou.distanceInKilometers:0
-              } km away from you
-
-              
+              {BusDistanceFromYou?.distanceInKilometers
+                ? BusDistanceFromYou.distanceInKilometers
+                : 0}{" "}
+              km away from you
             </Text>
           </Card>
 
@@ -501,10 +497,9 @@ const handleSheetChanges = useCallback((index) => {
                 size={18}
                 style={{ color: "black" }}
               />{" "}
-              Your Bus will reach OlavaKode Junction in {OlavaKodeData?.durationInMinutes}{" "}
-              Minutes {"("}
+              Your Bus will reach OlavaKode Junction in{" "}
+              {OlavaKodeData?.durationInMinutes} Minutes {"("}
               {OlavaKodeData?.distanceInKilometers} km {")"}
-              
             </Text>
           </Card>
 
@@ -518,7 +513,9 @@ const handleSheetChanges = useCallback((index) => {
                 size={18}
                 style={{ color: "black" }}
               />{" "}
-              Your Bus will reach Ummini Junction in {umminiData?.durationInMinutes} minutes {"("} {umminiData?.distanceInKilometers} km {")"}
+              Your Bus will reach Ummini Junction in{" "}
+              {umminiData?.durationInMinutes} minutes {"("}{" "}
+              {umminiData?.distanceInKilometers} km {")"}
             </Text>
           </Card>
         </View>

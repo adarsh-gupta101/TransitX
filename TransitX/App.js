@@ -18,9 +18,22 @@ import StudentLoginScreen from "./Screens/StudentLogin.jsx";
 import GetStarted from "./Screens/GetStarted.jsx";
 import NotificationList from "./Screens/Notification.jsx";
 import Push from "./pushnotify.jsx";
+import BusSchedule from "./Screens/BusSchedule.jsx";
+
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
+const Swipe = createMaterialTopTabNavigator();
+
+function MyTabs() {
+  return (
+    <Swipe.Navigator style={{ marginTop: 20 }}>
+      <Swipe.Screen name="College Bus" component={BusSchedule} />
+      <Swipe.Screen name="Line Bus" component={BusSchedule} />
+    </Swipe.Navigator>
+  );
+}
 
 function HomeStack() {
   return (
@@ -62,7 +75,7 @@ function HomeStack() {
         }}
       />
 
-<Tab.Screen
+      <Tab.Screen
         name="Notificationssection"
         component={Push}
         options={{
@@ -89,11 +102,10 @@ function HomeStack() {
 
 export default function App() {
   return (
-    
-
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="GetStarted" component={GetStarted} />
+        <Stack.Screen name="BusSchedule" component={MyTabs} />
         <Stack.Screen name="StudentLogin" component={StudentLoginScreen} />
         <Stack.Screen name="HomeScreen" component={HomeStack} />
         <Stack.Screen name="SignUp" component={SignUp} />

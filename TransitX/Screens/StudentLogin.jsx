@@ -1,23 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, KeyboardAvoidingView } from "react-native";
-import { TextInput, Button } from "react-native-paper";
+import {Button} from "react-native-paper"
+import { TextInput,  } from "react-native-paper";
 import { MaterialIcons } from "@expo/vector-icons";
 import UserCard from "./Component/StudentCard.jsx";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { supabase } from "../supabase.js";
 
-export default function StudentLoginScreen() {
+export default function StudentLoginScreen({navigation}) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [department, setDepartment] = useState("CSE");
   const [year, setYear] = useState("3");
   const [email, setEmail] = useState("");
+  const [ID, setID] = useState()
+
+
+
 
   useEffect(() => {
     AsyncStorage.getItem("userData").then((res) => {
       const data = JSON.parse(res);
       setFirstName(data.name);
       setEmail(data.email);
-      console.log(firstName);
+      console.log(data);
+      setID(data.id);
     });
   }, []);
 
@@ -41,9 +48,22 @@ export default function StudentLoginScreen() {
     setYear(text);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // handle the submission of the form
-    console.log("Form submitted!");
+    if(!ID){return alert("Please wait for the data to load")}
+    alert("Your data has been submitted");
+    
+    await supabase.from("students").upsert([
+      {
+        id: ID, // Provide the ID of the record you want to update, or leave it empty to create a new record
+        name: firstName,
+        email: email,
+        year: year,
+        branch: department,
+        college: "NSS",
+      },
+    ]).then((res) => {console.log(res);    alert("Your data has been submitted");
+  }).catch((err) => {console.log(err)});
   };
 
   return (
@@ -147,6 +167,25 @@ export default function StudentLoginScreen() {
       >
         Submit
       </Button>
+
+      {/* logout */}
+      {/* <View style={styles.inputContainer}> */}
+      
+        <Button
+          mode="contained"
+
+          onPress={() => {
+            AsyncStorage.removeItem("userData").then((res) => {
+              console.log(res);
+              navigation.navigate("SignUp");
+            });
+          }}
+          style={styles.button}
+          contentStyle={styles.buttonContent}
+        > 
+          Logout
+        </Button>
+      {/* </View> */}
     </KeyboardAvoidingView>
   );
 }
@@ -177,7 +216,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     borderRadius: 20,
     width: "80%",
-    backgroundColor: "#2196f3",
+    // backgroundColor: "#2196f3",
   },
   buttonContent: {
     height: 50,

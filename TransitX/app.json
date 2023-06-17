@@ -3,21 +3,33 @@
     "name": "TransitX",
     "slug": "TransitX",
     "version": "1.0.0",
+    "originalFullName    ": "adarsh_gupta/TransitX",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "scheme": "com.adarsh_gupta.TransitX",
     "splash": {
       "image": "./assets/TRansitx.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "notifications": {
+      "icon": "./assets/TRansitx.png"
+    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "foregroundImage": "./assets/TRansitx.png",
+          "backgroundColor": "#ffffff"
+        }
+      ]
+    ],
     "updates": {
       "fallbackToCacheTimeout": 0,
       "url": "https://u.expo.dev/9e2d0d31-662c-49c9-a8a6-976fb70fcf67"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
@@ -26,7 +38,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.adarsh_gupta.TransitX"
+      "package": "com.adarsh_gupta.TransitX",
+      "bundleIdentifier": "com.adarsh_gupta.Transitx"
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -127,7 +127,7 @@ const BusTrackingScreen = ({ navigation }) => {
           Current Location:{" NSS College of Engineering, near railway road"}{" "}
         </Text>
 
-        <TouchableOpacity style={styles.viewScheduleButton}>
+        <TouchableOpacity style={styles.viewScheduleButton} onPress={()=>{navigation.navigate("BusSchedule")}}>
           <Text style={styles.viewScheduleButtonText}>View Bus Schedule</Text>
         </TouchableOpacity>
       </View>
