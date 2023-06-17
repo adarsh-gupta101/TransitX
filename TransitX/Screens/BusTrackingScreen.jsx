@@ -4,6 +4,7 @@ import MapView, { Marker } from "react-native-maps";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { supabase } from "../supabase";
 import Lottie from "lottie-react-native";
+import { Button } from "react-native-paper";
 
 const BusTrackingScreen = ({ navigation }) => {
   const animationRef = useRef(null);
@@ -106,7 +107,13 @@ const BusTrackingScreen = ({ navigation }) => {
           <BusIcon isSelected={true} />
           <Text style={styles.busSelectorTitle}>Bus 1</Text>
         </View>
-        <View style={{ display: "flex", flexDirection: "row",justifyContent:"space-around" }}>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-around",
+          }}
+        >
           <View>
             <Text style={styles.nextBus}>Next bus time</Text>
             <Text style={styles.nextBusTime}>Bus 2: 08:20 AM</Text>
@@ -127,8 +134,12 @@ const BusTrackingScreen = ({ navigation }) => {
           Current Location:{" NSS College of Engineering, near railway road"}{" "}
         </Text>
 
-        <TouchableOpacity style={styles.viewScheduleButton} onPress={()=>{navigation.navigate("BusSchedule")}}>
-          <Text style={styles.viewScheduleButtonText}>View Bus Schedule</Text>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("BusSchedule");
+          }}
+        >
+          <Button mode="contained">View Bus Schedule</Button>
         </TouchableOpacity>
       </View>
       <MapView
@@ -171,7 +182,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   busSelectorWrapper: {
-    backgroundColor: "#2292A4",
+    backgroundColor: "#21005D",
     padding: 20,
     borderRadius: 10,
     marginTop: 20,
@@ -187,7 +198,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     padding: 15,
     width: "100%",
-    backgroundColor: "#2292A4",
+    backgroundColor: "#21006F",
   },
   busSelectorTitle: {
     fontSize: 18,

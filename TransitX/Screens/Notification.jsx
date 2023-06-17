@@ -1,109 +1,18 @@
-// import { useEffect, useRef } from "react";
-// import { Platform } from "react-native";
-// import * as Device from "expo-device";
-// import * as Notifications from "expo-notifications";
-// import { supabase } from "../supabase";
-
-// export function initializeNotifications() {
-//   useEffect(() => {
-//     registerForPushNotificationsAsync().then((token) => {
-//       if (Platform.OS === "android") {
-//         Notifications.setNotificationChannelAsync("default", {
-//           name: "default",
-//           importance: Notifications.AndroidImportance.MAX,
-//           vibrationPattern: [0, 250, 250, 250],
-//           lightColor: "#FF231F7C",
-//         });
-//       }
-//     });
-
-//     const notificationListener = Notifications.addNotificationReceivedListener(
-//       (notification) => {
-//         handleNotification(notification);
-//       }
-//     );
-
-//     const responseListener =
-//       Notifications.addNotificationResponseReceivedListener((response) => {
-//         console.log(response);
-//       });
-
-//     const subscription = supabase
-//       .from("messages")
-//       .on("INSERT", (payload) => {
-//         const newMessage = payload.new;
-//         sendPushNotification(newMessage.message);
-//       })
-//       .subscribe();
-
-//     return () => {
-//       Notifications.removeNotificationSubscription(notificationListener);
-//       Notifications.removeNotificationSubscription(responseListener);
-//       subscription.unsubscribe();
-//     };
-//   }, []);
-// }
-
-// function sendPushNotification(message) {
-//   Notifications.scheduleNotificationAsync({
-//     content: {
-//       title: "New Message",
-//       body: message,
-//       ios: {
-//         sound: true,
-//       },
-//       android: {
-//         sound: true,
-//         priority: "high",
-//         sticky: false,
-//         vibrate: true,
-//         alert: true,
-//       },
-//     },
-//     trigger: null,
-//   });
-// }
-
-// async function registerForPushNotificationsAsync() {
-//   let token;
-
-//   if (Platform.OS === "android") {
-//     await Notifications.setNotificationChannelAsync("default", {
-//       name: "default",
-//       importance: Notifications.AndroidImportance.MAX,
-//       vibrationPattern: [0, 250, 250, 250],
-//       lightColor: "#FF231F7C",
-//     });
-//   }
-
-//   if (Device.isDevice) {
-//     const { status: existingStatus } =
-//       await Notifications.getPermissionsAsync();
-//     let finalStatus = existingStatus;
-//     if (existingStatus !== "granted") {
-//       const { status } = await Notifications.requestPermissionsAsync();
-//       finalStatus = status;
-//     }
-//     if (finalStatus !== "granted") {
-//       alert("Failed to get push token for push notification!");
-//       return;
-//     }
-//     token = (await Notifications.getExpoPushTokenAsync()).data;
-//     console.log(token);
-//   } else {
-//     alert("Must use physical device for Push Notifications");
-//   }
-
-//   return token;
-// }
-
-import React, { useEffect, useState } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
-import { supabase } from "../supabase";
+import React, { useState, useEffect, useRef } from "react";
+import { FlatList, StyleSheet, Text, View, Image } from "react-native";
+import { supabase } from "..//supabase";
+import Lottie from "lottie-react-native";
 
 export default function NotificationList() {
   const [notifications, setNotifications] = useState([]);
+  const animationRef = useRef(null);
 
+  useEffect(() => {
+    animationRef.current?.play();
+
+    // Or set a specific startFrame and endFrame with:
+    animationRef.current?.play(30, 120);
+  }, []);
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
@@ -126,10 +35,28 @@ export default function NotificationList() {
   }, []);
 
   const renderNotification = ({ item }) => {
+    const formattedDate = new Date(item.timestamp);
+    const formattedDateString = formattedDate.toLocaleDateString();
+    const formattedTimeString = formattedDate.toLocaleTimeString();
     return (
       <View style={styles.notification}>
-        <Text style={styles.message}>{item.message}</Text>
-        <Text style={styles.timestamp}>{item.timestamp}</Text>
+        <View style={styles.content}>
+          {/* <Image
+            source={require("../path/to/notification-image.png")}
+            style={styles.image}
+          /> */}
+          <Lottie
+            ref={animationRef}
+            source={require("../assets/bus.json")}
+            style={{ width: 50, height: 50 }}
+          />
+          <View style={styles.textContainer}>
+            <Text style={styles.message}>{item.message}</Text>
+            <Text style={styles.timestamp}>
+              {formattedDateString} {formattedTimeString}
+            </Text>
+          </View>
+        </View>
       </View>
     );
   };
@@ -156,6 +83,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: "#f1f1f1",
+    margin: 20,
   },
   heading: {
     fontSize: 24,
@@ -178,6 +107,19 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+  },
+  content: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  image: {
+    width: 40,
+    height: 40,
+    marginRight: 10,
+  },
+  textContainer: {
+    flex: 1,
+    margin: 5,
   },
   message: {
     fontSize: 18,

@@ -224,7 +224,6 @@ const FullScreenMap = () => {
             longitude,
           })
         );
-        console.log("transformedCoordinates-------", transformedCoordinates);
 
         setFootWalkingCoordinate(transformedCoordinates);
         // console.log("111", decodePolyline(coordinates));
