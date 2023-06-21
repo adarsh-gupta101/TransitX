@@ -13,6 +13,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    
     "notifications": {
       "icon": "./assets/TRansitx.png"
     },
@@ -50,7 +51,9 @@
       }
     },
     "runtimeVersion": {
-      "policy": "sdkVersion"
+      "policy": "sdkVersion",
+      "version": "47.0.0",
+      "exposdk":"47.0.0"
     }
   }
 }

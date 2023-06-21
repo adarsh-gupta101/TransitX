@@ -23,6 +23,8 @@ import * as Location from "expo-location";
 
 // maps
 import MapView, { Marker, Polyline } from "react-native-maps";
+import Constants from 'expo-constants';
+
 
 const FullScreenMap = () => {
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -61,7 +63,6 @@ const FullScreenMap = () => {
     longitude: 76.6426,
   });
 
-  const API = "5b3ce3597851110001cf6248771493c655ba4a5a8b6fab61932e875e";
 
   const [userLocation, SetUserLocation] = useState();
   const [FootWalkingCoordinate, setFootWalkingCoordinate] = useState(null);
@@ -142,7 +143,7 @@ const FullScreenMap = () => {
         "https://api.openrouteservice.org/v2/directions/driving-hgv",
         {
           params: {
-            api_key: API, // Replace with your OpenRouteService API key
+            api_key: Constants.manifest.extra.API_KEY_ORS, // Replace with your OpenRouteService API key
             start: `${startingCoordinates.longitude},${startingCoordinates.latitude}`,
             end: `${endingCoordinates.longitude},${endingCoordinates.latitude}`,
             // end: `${76.63165},${10.82344}`,
@@ -196,7 +197,7 @@ const FullScreenMap = () => {
         "https://api.openrouteservice.org/v2/directions/foot-walking",
         {
           params: {
-            api_key: API, // Replace with your OpenRouteService API key
+            api_key: Constants.manifest.extra.API_KEY_ORS, // Replace with your OpenRouteService API key
             start: `${startingCoordinates.longitude},${startingCoordinates.latitude}`,
             end: `${endingCoordinates.longitude},${endingCoordinates.latitude}`,
             // end: `${76.63165},${10.82344}`,
@@ -210,7 +211,7 @@ const FullScreenMap = () => {
         }
       );
 
-      console.log(1);
+      console.log(12);
 
       if (response.data) {
         const coordinates = response.data.features[0].geometry.coordinates;
@@ -244,7 +245,7 @@ const FullScreenMap = () => {
         "https://api.openrouteservice.org/v2/directions/driving-car",
         {
           params: {
-            api_key: API, // Replace with your OpenRouteService API key
+            api_key: Constants.manifest.extra.API_KEY_ORS, // Replace with your OpenRouteService API key
             start: `${originCoordinates?.longitude},${originCoordinates?.latitude}`,
             end: `${destinationCoordinates?.longitude},${destinationCoordinates?.latitude}`,
           },

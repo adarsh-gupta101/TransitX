@@ -13,9 +13,12 @@ import { Button } from "react-native-paper";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Lottie from 'lottie-react-native';
+import Constants from 'expo-constants';
+
 
 
 const HomeScreen = ({ navigation }) => {
+  console.log(Constants.manifest.extra.API_KEY_ORS)
   const [selectedRoute, setSelectedRoute] = useState("Bus 1");
   const routes = ["Bus 1", "Bus 2", "Bus 3"];
 
